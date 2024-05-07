@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Lab1 - My Documentation</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">My Documentation</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Labs <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../docs/lab1.md" class="dropdown-item">Lab 1</a>
+</li>
+                                    
+<li>
+    <a href="../docs/lab2.md" class="dropdown-item">Lab 2</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="2"><a href="#no1" class="nav-link">Документация по лабораторной работе №1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#_1" class="nav-link">Модели</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#_2" class="nav-link">Схемы</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#_15" class="nav-link">Вывод</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h2 id="no1">Документация по лабораторной работе №1</h2>
+<h3 id="enums">Перечисления (Enums)</h3>
+<h3 id="prioritylevel">PriorityLevel</h3>
+<p>Представляет уровень приоритета задачи.</p>
+<pre><code class="language-python">class PriorityLevel(Enum):
+    LOW = 1
+    MEDIUM = 2
+    HIGH = 3
+    CRITICAL = 4
+</code></pre>
+<h3 id="taskstatus">TaskStatus</h3>
+<p>Предоставляет варианты статусов для задачи в рамках системы.</p>
+<pre><code class="language-python">class TaskStatus(Enum):
+    ACTIVE = &quot;active&quot;
+    COMPLETED = &quot;completed&quot;
+    DEFERRED = &quot;deferred&quot;
+</code></pre>
+<hr />
+<h2 id="_1">Модели</h2>
+<h3 id="taskschedulelink">TaskScheduleLink</h3>
+<p>Связывает задачу с расписанием и включает соответствующую информацию о назначении.</p>
+<pre><code class="language-python">class TaskScheduleLink(SQLModel, table=True):
+    task_id: int
+    schedule_id: int
+    assignment_date: datetime
+    note: Optional[str]
+</code></pre>
+<h3 id="task">Task</h3>
+<p>Определяет свойства задачи, включая ее статус, приоритет, крайний срок, связанного пользователя и связанные анализы времени.</p>
+<pre><code class="language-python">class Task(SQLModel, table=True):
+    id: Optional[int]
+    title: str
+    description: str
+    priority: PriorityLevel
+    deadline: datetime
+    user_id: int
+    status: TaskStatus
+    created_at: datetime
+    updated_at: datetime
+    schedules: List[&quot;Schedule&quot;]
+    user: Optional[&quot;User&quot;]
+    time_analyses: List[&quot;TimeAnalysis&quot;]
+</code></pre>
+<h3 id="user">User</h3>
+<p>Представляет пользователя системы. Содержит информацию о задачах пользователя, а также данные для аутентификации.</p>
+<pre><code class="language-python">class User(SQLModel, table=True):
+    id: Optional[int]
+    username: str
+    email: str
+    hashed_password: str
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+    tasks: List[Task]
+</code></pre>
+<h3 id="schedule">Schedule</h3>
+<p>Представляет расписание, соответствующее пользователю и список задач.</p>
+<pre><code class="language-python">class Schedule(SQLModel, table=True):
+    id: Optional[int]
+    date: datetime
+    user_id: int
+    tasks: List[&quot;Task&quot;]
+</code></pre>
+<h3 id="timeanalysis">TimeAnalysis</h3>
+<p>Отслеживает время, затраченное на конкретную задачу.</p>
+<pre><code class="language-python">class TimeAnalysis(SQLModel, table=True):
+    id: Optional[int]
+    task_id: int
+    time_spent: float
+    task: Task
+</code></pre>
+<hr />
+<h2 id="_2">Схемы</h2>
+<h3 id="createtask">CreateTask</h3>
+<p>Схема для создания новой задачи.</p>
+<pre><code class="language-python">class CreateTask(BaseModel):
+    title: str
+    description: str
+    deadline: datetime
+    priority: PriorityLevel
+    user_id: int
+</code></pre>
+<h3 id="updatetask">UpdateTask</h3>
+<p>Схема для обновления информации о существующей задаче.</p>
+<pre><code class="language-python">class UpdateTask(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+    deadline: Optional[datetime]
+    priority: Optional[PriorityLevel]
+    time_spent: Optional[float]
+    user_id: int
+</code></pre>
+<h3 id="taskresponse">TaskResponse</h3>
+<p>Схема для представления ответа, содержащего данные задачи.</p>
+<pre><code class="language-python">class TaskResponse(BaseModel):
+    id: int
+    title: str
+    description: str
+    deadline: datetime
+    priority: PriorityLevel
+    status: TaskStatus
+    user_id: int
+    time_spent: float
+</code></pre>
+<h3 id="schedulebase">ScheduleBase</h3>
+<p>Базовая схема для расписаний.</p>
+<pre><code class="language-python">class ScheduleBase(BaseModel):
+    date: datetime
+</code></pre>
+<h3 id="scheduleresponse">ScheduleResponse</h3>
+<p>Ответ схемы, который включает задачи, связанные с расписанием.</p>
+<pre><code class="language-python">class ScheduleResponse(ScheduleBase):
+    id: int
+    tasks: List[TaskResponse]
+</code></pre>
+<h3 id="createschedule">CreateSchedule</h3>
+<p>Схема для создания нового расписания со связанными задачами.</p>
+<pre><code class="language-python">class CreateSchedule(ScheduleBase):
+    tasks: List[int]
+</code></pre>
+<h3 id="usercreate">UserCreate</h3>
+<p>Схема для создания нового пользователя.</p>
+<pre><code class="language-python">class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+</code></pre>
+<h3 id="userauthenticate">UserAuthenticate</h3>
+<p>Схема для входа пользователя.</p>
+<pre><code class="language-python">class UserAuthenticate(BaseModel):
+    username: str
+    password: str
+</code></pre>
+<h3 id="createtimeanalysis">CreateTimeAnalysis</h3>
+<p>Схема для создания новой записи анализа времени для задачи.</p>
+<pre><code class="language-python">class CreateTimeAnalysis(BaseModel):
+    task_id: int
+    time_spent: Optional[float]
+</code></pre>
+<h3 id="timeanalysisresponse">TimeAnalysisResponse</h3>
+<p>Схема для ответа, содержащего данные анализа времени.</p>
+<pre><code class="language-python">class TimeAnalysisResponse(BaseModel):
+    id: int
+    task_id: int
+    time_spent: float
+</code></pre>
+<p>Файл <code>main.py</code> содержит основной код для обработки запросов и роутинга в приложении. Он включает в себя обработчики запросов для создания, чтения, обновления и удаления задач, расписаний и анализа времени.</p>
+<h3 id="_3">Инициализация базы данных</h3>
+<p>Функция <code>init_db()</code> используется для создания всех таблиц в базе данных при запуске приложения.</p>
+<h3 id="_4">Создание задачи</h3>
+<p><code>create_task()</code> обработчик POST запроса принимает данные о задаче и создает новую запись в базе данных. Также связывает задачу с текущим пользователем.</p>
+<h3 id="_5">Чтение задач</h3>
+<p><code>read_tasks()</code> обработчик GET запроса возвращает список всех задач из базы данных.</p>
+<h3 id="_6">Создание расписания</h3>
+<p><code>create_schedule()</code> обработчик POST запроса создает новое расписание на основе данных, полученных от пользователя. Также связывает задачи с этим расписанием.</p>
+<h3 id="_7">Чтение расписаний</h3>
+<p><code>read_schedules()</code> обработчик GET запроса возвращает список расписаний текущего пользователя. Можно получить конкретное расписание, указав его ID.</p>
+<h3 id="_8">Обновление задачи</h3>
+<p><code>update_task()</code> обработчик PATCH запроса обновляет данные о задаче на основе полученных данных от пользователя.</p>
+<h3 id="_9">Удаление задачи</h3>
+<p><code>delete_task()</code> обработчик DELETE запроса удаляет задачу из базы данных.</p>
+<h3 id="_10">Обновление анализа времени</h3>
+<p><code>update_time_analysis()</code> обработчик PATCH запроса обновляет данные анализа времени задачи.</p>
+<h3 id="_11">Вспомогательные файлы</h3>
+<p><code>app.py</code> файл содержит создание и настройку экземпляра FastAPI приложения. 
+Используется <code>CORSMiddleware</code> для обработки запросов CORS.</p>
+<p><code>database.py</code> файл содержит конфигурацию базы данных и создание сессии для взаимодействия с ней.</p>
+<ol>
+<li><code>DATABASE_URL</code>: Строка подключения к базе данных, полученная из переменных окружения.</li>
+<li><code>engine</code>: Экземпляр движка базы данных, созданный на основе <code>DATABASE_URL</code>.</li>
+<li><code>get_session()</code>: Функция-генератор, создающая и возвращающая сессию для взаимодействия с базой данных.</li>
+</ol>
+<h3 id="_12">Авторизация</h3>
+<p><code>auth.py</code> файл содержит обработчики запросов для аутентификации пользователей и выдачи токенов доступа.</p>
+<h3 id="_13">Импорты</h3>
+<ol>
+<li><code>JWTError</code>, <code>jwt</code>: Импортируются из <code>jose</code>, используются для работы с JWT токенами.</li>
+<li><code>CryptContext</code>: Импортируется из <code>passlib.context</code>, используется для хеширования паролей.</li>
+<li><code>OAuth2PasswordBearer</code>, <code>OAuth2PasswordRequestForm</code>: Импортируются из <code>fastapi.security</code>, используются для аутентификации с помощью OAuth2 и получения формы запроса пароля.</li>
+<li><code>secrets</code>: Импортируется из <code>secrets</code>, используется для генерации секретного ключа.</li>
+</ol>
+<h3 id="_14">Основные функции и методы</h3>
+<ol>
+<li><code>generate_secret_key(length=32)</code>: Функция для генерации секретного ключа.</li>
+<li><code>verify_password(plain_password, hashed_password)</code>: Функция для проверки пароля.</li>
+<li><code>get_password_hash(password)</code>: Функция для получения хэша пароля.</li>
+<li><code>create_access_token(data: dict, expires_delta: timedelta = None)</code>: Функция для создания JWT токена доступа.</li>
+<li><code>create_user(user: UserCreate, session: Session = Depends(get_session))</code>: Обработчик POST запроса для создания пользователя.</li>
+<li><code>login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session))</code>: Обработчик POST запроса для аутентификации и получения токена доступа.</li>
+<li><code>authenticate_user(username: str, password: str, session: Session)</code>: Функция для аутентификации пользователя.</li>
+<li><code>get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session))</code>: Функция для получения текущего пользователя.</li>
+<li><code>read_users_me(current_user: User = Depends(get_current_user))</code>: Обработчик GET запроса для получения информации о текущем пользователе.</li>
+</ol>
+<h2 id="_15">Вывод</h2>
+<p>Лабораторная работа по работе с FastAPI позволила освоить разработку веб-приложений с использованием данного фреймворка. В ходе работы были изучены и применены различные концепции, такие как создание роутов, работа с моделями данных, аутентификация и авторизация пользователей, использование базы данных для хранения информации.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

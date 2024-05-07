@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Лабораторная работа №2: Сравнение подходов к параллельному программированию в Python - My Documentation</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">My Documentation</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Labs <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../docs/lab1.md" class="dropdown-item">Lab 1</a>
+</li>
+                                    
+<li>
+    <a href="../docs/lab2.md" class="dropdown-item">Lab 2</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#no2-python" class="nav-link">Лабораторная работа №2: Сравнение подходов к параллельному программированию в Python</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#threading" class="nav-link">Threading</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#multiprocessing" class="nav-link">Multiprocessing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#async" class="nav-link">Async</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#_1" class="nav-link">Сравнение результатов</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#threading-approach" class="nav-link">Threading Approach</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#multiprocessing-approach" class="nav-link">Multiprocessing Approach</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#async-approach" class="nav-link">Async Approach</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#_8" class="nav-link">Сравнение результатов</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#_9" class="nav-link">Заключение</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="no2-python">Лабораторная работа №2: Сравнение подходов к параллельному программированию в Python</h1>
+<p>В данной лабораторной работе мы сравниваем три различных подхода к параллельному программированию в Python: threading, multiprocessing и async. </p>
+<p>Задача 1: Каждый из подходов используется для решения задачи суммирования всех чисел от 1 до 1000000, разбивая вычисления на несколько параллельных задач для ускорения выполнения.</p>
+<h2 id="threading">Threading</h2>
+<p>Первый подход использует модуль <code>threading</code> для создания нескольких потоков, каждый из которых выполняет часть вычислений. Код программы <code>thread.py</code> выглядит следующим образом:</p>
+<pre><code class="language-python">import threading
+from time import time
+
+def calculate_sum(start, end, result, index):
+    total = sum(range(start, end + 1))
+    result[index] = total
+
+def main():
+    thread_count = 10
+    numbers_per_thread = 100000 // thread_count
+    threads = []
+    results = [0] * thread_count
+
+    start_time = time()
+    for i in range(thread_count):
+        start = i * numbers_per_thread + 1
+        end = start + numbers_per_thread - 1
+        t = threading.Thread(target=calculate_sum, args=(start, end, results, i))
+        threads.append(t)
+        t.start()
+
+    for t in threads:
+        t.join()
+
+    total_sum = sum(results)
+    print(f&quot;Total sum is {total_sum}&quot;)
+
+    end_time = time()
+    print(f&quot;Threading time: {end_time - start_time}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Время выполнения программы: 0.004998922348022461 сек.</p>
+<h2 id="multiprocessing">Multiprocessing</h2>
+<p>Второй подход использует модуль <code>multiprocessing</code> для создания нескольких процессов, каждый из которых выполняет часть вычислений. Код программы <code>multi.py</code> выглядит следующим образом:</p>
+<pre><code class="language-python">from multiprocessing import Process, Array
+from time import time
+
+def calculate_sum(start, end, result, index):
+    total = sum(range(start, end + 1))
+    result[index] = total
+
+def main():
+    process_count = 10
+    numbers_per_process = 100000 // process_count
+    processes = []
+    results = Array(&quot;i&quot;, process_count)
+
+    start_time = time()
+    for i in range(process_count):
+        start = i * numbers_per_process + 1
+        end = start + numbers_per_process - 1
+        p = Process(target=calculate_sum, args=(start, end, results, i))
+        processes.append(p)
+        p.start()
+
+    for p in processes:
+        p.join()
+
+    total_sum = sum(results)
+    print(f&quot;Total sum is {total_sum}&quot;)
+
+    end_time = time()
+    print(f&quot;Multiprocessing time: {end_time - start_time}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Время выполнения программы: 0.35558557510375977 сек.</p>
+<h2 id="async">Async</h2>
+<p>Третий подход использует модуль <code>asyncio</code> для создания нескольких асинхронных задач, каждая из которых выполняет часть вычислений. Код программы <code>asyn.py</code> выглядит следующим образом:</p>
+<pre><code class="language-python">import asyncio
+from time import time
+
+async def calculate_sum(start, end):
+    total = sum(range(start, end + 1))
+    return total
+
+async def main():
+    task_count = 10
+    numbers_per_task = 100000 // task_count
+    tasks = []
+
+    start_time = time()
+    for i in range(task_count):
+        start = i * numbers_per_task + 1
+        end = start + numbers_per_task - 1
+        tasks.append(calculate_sum(start, end))
+
+    results = await asyncio.gather(*tasks)
+    total_sum = sum(results)
+    print(f&quot;Total sum is {total_sum}&quot;)
+
+    end_time = time()
+    print(f&quot;Async time: {end_time - start_time}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())
+</code></pre>
+<p>Время выполнения программы: 0.001003265380859375 сек.</p>
+<h2 id="_1">Сравнение результатов</h2>
+<p>В таблице ниже приведены результаты сравнения времени выполнения программ на основе разных подходов:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Time (sec)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Threading</td>
+<td>0.004998922348022461</td>
+</tr>
+<tr>
+<td>Multiprocessing</td>
+<td>0.35558557510375977</td>
+</tr>
+<tr>
+<td>Async</td>
+<td>0.001003265380859375</td>
+</tr>
+</tbody>
+</table>
+<p>Как видно из таблицы, подход с использованием <code>asyncio</code> оказался самым быстрым, что связано с эффективным использованием асинхронных задач для параллельного выполнения вычислений. Подход с использованием <code>multiprocessing</code> оказался медленнее, что связано с дополнительными затратами на создание и управление процессами. Подход с использованием <code>threading</code> оказался медленнее, чем <code>asyncio</code>, но быстрее, чем <code>multiprocessing</code>, что связано с ограничениями на использование потоков в Python.</p>
+<p>Задача 2: описаны три программы на Python для параллельного парсинга веб-страниц с сохранением данных в базу данных, используя подходы threading, multiprocessing и async.</p>
+<h2 id="threading-approach">Threading Approach</h2>
+<p>Программа <code>threading_parsing.py</code> использует модуль <code>threading</code> для параллельного парсинга веб-страниц. Она создает несколько потоков, каждый из которых парсит информацию с отдельного веб-сайта.</p>
+<h3 id="_2">Код</h3>
+<pre><code class="language-python">def parse_data_chunk(urls):
+    for url in urls:
+        parse_data(url)
+
+def parse_data_in_parallel(urls):
+    start_time = datetime.now()
+
+    num_threads = 2
+    chunk_size = len(urls) // num_threads
+    threads = []
+
+    for i in range(num_threads):
+        start = i * chunk_size
+        end = (i + 1) * chunk_size if i &lt; num_threads - 1 else len(urls)
+        chunk = urls[start:end]
+        t = threading.Thread(target=parse_data_chunk, args=(chunk,))
+        threads.append(t)
+        t.start()
+
+    for t in threads:
+        t.join()
+
+    end_time = datetime.now()
+    logging.info(f&quot;Total parsing time: {end_time - start_time}&quot;)
+
+urls = [
+    &quot;https://status.msk.cloud.vk.com/incidents&quot;,
+    &quot;https://status.yandex.cloud/ru/timeline&quot;,
+]
+
+if __name__ == &quot;__main__&quot;:
+    parse_data_in_parallel(urls)
+</code></pre>
+<h3 id="_3">Результаты</h3>
+<pre><code>Total parsing time: 0:00:15.488683
+</code></pre>
+<h2 id="multiprocessing-approach">Multiprocessing Approach</h2>
+<p>Программа <code>multiprocessing_parsing.py</code> использует модуль <code>multiprocessing</code> для параллельного парсинга веб-страниц. Она создает несколько процессов, каждый из которых парсит информацию с отдельного веб-сайта.</p>
+<h3 id="_4">Код</h3>
+<pre><code class="language-python">urls = [
+    &quot;https://status.msk.cloud.vk.com/incidents&quot;,
+    &quot;https://status.yandex.cloud/ru/timeline&quot;,
+]
+
+
+def parse_data_in_parallel(urls):
+    with multiprocessing.Pool(processes=2) as pool:
+        pool.map(parse_data, urls)
+
+
+if __name__ == &quot;__main__&quot;:
+    start_time = datetime.now()
+    parse_data_in_parallel(urls)
+    end_time = datetime.now()
+    logging.info(f&quot;All URLs parsed in {end_time - start_time}&quot;)
+</code></pre>
+<h3 id="_5">Результаты</h3>
+<pre><code>INFO - All URLs parsed in 0:00:14.994050
+</code></pre>
+<h2 id="async-approach">Async Approach</h2>
+<p>Программа <code>async_parsing.py</code> использует модуль <code>aiohttp</code> и <code>asyncio</code> для параллельного парсинга веб-страниц. Она создает несколько задач, каждая из которых парсит информацию с отдельного веб-сайта.</p>
+<h3 id="_6">Код</h3>
+<pre><code class="language-python">async def parse_data(session, url):
+    logging.info(f&quot;Started scraping site {url}&quot;)
+    s = Service(
+        &quot;C:\\Users\\a.makunina\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe&quot;
+    )
+    driver = webdriver.Chrome(service=s)
+
+    async with session.get(url):
+            driver.get(url)
+        ...
+
+async def main():
+    urls = [
+        &quot;https://status.msk.cloud.vk.com/incidents&quot;,
+        &quot;https://status.yandex.cloud/ru/timeline&quot;,
+    ]
+    async with aiohttp.ClientSession() as session:
+        tasks = [parse_data(session, url) for url in urls]
+        await asyncio.gather(*tasks)
+
+
+if __name__ == &quot;__main__&quot;:
+    start_time = datetime.now()
+    asyncio.run(main())
+    end_time = datetime.now()
+    logging.info(f&quot;All URLs parsed in {end_time - start_time}&quot;)
+</code></pre>
+<h3 id="_7">Результаты</h3>
+<pre><code>All URLs parsed in 0:00:23.774665
+</code></pre>
+<h2 id="_8">Сравнение результатов</h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Time (sec)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Threading</td>
+<td>0:00:15.488683</td>
+</tr>
+<tr>
+<td>Multiprocessing</td>
+<td>0:00:14.994050</td>
+</tr>
+<tr>
+<td>Async</td>
+<td>0:00:23.774665</td>
+</tr>
+</tbody>
+</table>
+<p>Как видно из таблицы, подход с использованием multiprocessing оказался самым быстрым, за ним следует threading, а async подход оказался самым медленным. Это может быть связано с тем, что async подход использует дополнительные ресурсы для создания задач и управления ими, что может привести к дополнительной задержке.</p>
+<h2 id="_9">Заключение</h2>
+<p>Полученные данные подчеркивают, что выбор между threading, multiprocessing, и async подходами должен быть обусловлен спецификой задачи. В частности:</p>
+<ul>
+<li>Для легковесных операций с большим количеством ожидания (IO-bound tasks), таких как запросы к API или операции чтения/записи файлов, предпочтительнее использовать async.</li>
+<li>Для задач, требующих интенсивных вычислений и минимальное взаимодействие с внешними системами (CPU-bound tasks), эффективнее могут быть multiprocessing.</li>
+<li>Threading может быть хорошим компромиссом в ситуациях, когда задачи не требуют интенсивной работы с CPU, но при этом есть необходимость в параллельной обработке данных без значительного оверхеда, связанного с процессами.</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

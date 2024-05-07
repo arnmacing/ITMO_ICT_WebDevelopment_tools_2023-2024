@@ -1,3 +1,6 @@
-site_name: My Docs
-
-theme: readthedocs
+site_name: My Documentation
+nav:
+    - Home: index.md
+    - Labs:
+        - Lab 1: docs/lab1.md
+        - Lab 2: docs/lab2.md
