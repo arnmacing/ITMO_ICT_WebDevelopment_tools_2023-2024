@@ -1,6 +1,6 @@
 site_name: My Documentation
 nav:
-    - Home: index.md
+    - Home: docs/index.md
     - Labs:
         - Lab 1: docs/lab1.md
         - Lab 2: docs/lab2.md
