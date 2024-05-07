@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from fastapi import HTTPException, Depends, Response
-from sqlmodel import Session, select, create_engine, delete
+from sqlmodel import Session, select, delete
 from starlette import status
 from .app import app
 from ..endpoints import auth
