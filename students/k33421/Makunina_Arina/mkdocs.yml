@@ -1,8 +1,6 @@
 site_name: "Лабораторные работы"
-
 theme:
   name: material
-
 nav:
     - Home: index.md
     - Labs:
