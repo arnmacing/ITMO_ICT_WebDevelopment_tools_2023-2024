@@ -7,7 +7,7 @@ from starlette import status
 from sqlmodel import SQLModel
 
 from backend.database import get_session, engine
-from endpoints.auth import router as auth_router
+from endpoints.auth import router as auth_router, get_current_user
 from backend.app import app
 from backend.models import (
     TaskResponse,
@@ -25,6 +25,7 @@ from backend.models import (
     User,
 )
 
+
 app.include_router(auth_router)
 
 
@@ -41,7 +42,7 @@ def init_db():
 def create_task(
     task_data: CreateTask,
     session: Session = Depends(get_session),
-    current_user: User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     db_task = Task.from_orm(task_data)  # Создает объект задачи из полученных данных
     db_task.user_id = current_user.id  # Присваивает задаче ID текущего пользователя
@@ -68,7 +69,7 @@ def read_tasks(session: Session = Depends(get_session)):
 def create_schedule(
     schedule_data: CreateSchedule,
     session: Session = Depends(get_session),
-    current_user: User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     db_schedule = Schedule(date=schedule_data.date, user_id=current_user.id)
     session.add(db_schedule)
@@ -97,7 +98,7 @@ def create_schedule(
 async def read_schedules(
     schedule_id: Optional[int] = None,
     session: Session = Depends(get_session),
-    current_user: User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     if schedule_id:
         schedule = session.get(Schedule, schedule_id)
@@ -136,7 +137,7 @@ def update_task(
     task_id: int,
     task_data: UpdateTask,
     session: Session = Depends(get_session),
-    current_user: User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     db_task = session.get(Task, task_id)
     if not db_task:
@@ -173,7 +174,7 @@ def update_task(
 def delete_task(
     task_id: int,
     session: Session = Depends(get_session),
-    current_user: User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     db_task = session.exec(select(Task).where(Task.id == task_id)).first()
     if not db_task or db_task.user_id != current_user.id:
@@ -193,7 +194,7 @@ def update_time_analysis(
     time_analysis_id: int,
     time_analysis_data: CreateTimeAnalysis,
     session: Session = Depends(get_session),
-    current_user: User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     time_analysis = session.get(TimeAnalysis, time_analysis_id)
     if not time_analysis:
