@@ -1,6 +1,5 @@
 FROM python:3.11
 
-# Установка зависимостей системы
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
@@ -10,13 +9,28 @@ RUN apt-get update && apt-get install -y \
     libgconf-2-4 \
     libxss1 \
     libappindicator3-1 \
-    libasound2
+    libasound2 \
+    fonts-liberation \
+    libappindicator3-1 \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip \
-    && mv chromedriver /usr/bin/chromedriver \
+# Установка Google Chrome версии 125.0.6422.141
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip \
+    && unzip chrome-linux64.zip -d /opt/ \
+    && mv /opt/chrome-linux64 /opt/google-chrome \
+    && ln -s /opt/google-chrome/chrome /usr/bin/google-chrome \
+    && rm chrome-linux64.zip
+
+# Установка ChromeDriver версии 125.0.6422.141
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip \
+    && unzip chromedriver-linux64.zip \
+    && mv chromedriver-linux64/chromedriver /usr/bin/chromedriver \
     && chown root:root /usr/bin/chromedriver \
-    && chmod +x /usr/bin/chromedriver
+    && chmod +x /usr/bin/chromedriver \
+    && rm chromedriver-linux64.zip
+
+RUN ls -l /usr/bin/chromedriver
 
 WORKDIR /app
 

@@ -1,11 +1,12 @@
+import logging
+import os
+import sys
 from datetime import datetime
-from typing import List, Optional
-
 from fastapi import HTTPException, Depends, Response
 from sqlmodel import Session, select, delete
 from starlette import status
 from sqlmodel import SQLModel
-
+from typing import List, Optional
 from backend.database import get_session, engine
 from endpoints.auth import router as auth_router, get_current_user
 from backend.app import app
@@ -24,9 +25,17 @@ from backend.models import (
     UpdateTask,
     User,
 )
+import requests
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
 app.include_router(auth_router)
+
+PARSER_URL = os.getenv("PARSER_URL", "http://parser:8000")
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 @app.on_event("startup")
@@ -38,25 +47,43 @@ def init_db():
     SQLModel.metadata.create_all(engine)  # создает все таблицы в бд
 
 
-@app.post("/tasks/", response_model=TaskResponse)
-def create_task(
-    task_data: CreateTask,
-    session: Session = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-):
-    db_task = Task.from_orm(task_data)  # Создает объект задачи из полученных данных
-    db_task.user_id = current_user.id  # Присваивает задаче ID текущего пользователя
-    session.add(db_task)  # Добавляет задачу в сессию бд
-    session.commit()  # Фиксирует изменения в бд
-    session.refresh(db_task)  # Обновляет объект
-    return TaskResponse(  # Возвращает данные созданной задачи
-        id=db_task.id,
-        title=db_task.title,
-        description=db_task.description,
-        priority=db_task.priority,
-        status=db_task.status,
-        user_id=db_task.user_id,
+@app.post("/tasks/", response_model=dict)
+def create_task(task_data: CreateTask):
+    # Постановка запроса на парсинг
+    response = requests.post(
+        f"{PARSER_URL}/parse/",
+        json={
+            "url": task_data.url,
+            "callback_url": "http://web:8000/tasks/callback/",
+        },
     )
+    if response.status_code != 200:
+        raise HTTPException(status_code=400, detail="Parsing failed")
+
+    return {"detail": "Parsing started"}
+
+
+@app.post("/tasks/callback/")
+def parse_callback(parsed_data: List[dict], session: Session = Depends(get_session)):
+    # Вставка спарсенных данных в базу данных итеративно
+    db_tasks = []
+    for data in parsed_data:
+        db_task = Task(
+            title=data["title"],
+            description=data["description"],
+            priority=data["priority"],
+            deadline=data["deadline"],
+            user_id=data["user_id"],
+            status=data["status"],
+        )
+        session.add(db_task)
+        db_tasks.append(db_task)
+        session.commit()  # Коммитим каждую запись для итеративного добавления
+        session.refresh(db_task)
+        logging.info(f"Added task: {db_task.title}, ID: {db_task.id}")
+
+    logging.info("All tasks added to the database")
+    return {"detail": "Tasks added to the database"}
 
 
 @app.get("/tasks/", response_model=List[TaskResponse])

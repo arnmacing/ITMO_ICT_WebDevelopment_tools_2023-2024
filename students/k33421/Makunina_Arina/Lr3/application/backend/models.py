@@ -79,12 +79,16 @@ class TimeAnalysis(SQLModel, table=True):
 Task.time_analyses: List[TimeAnalysis] = Relationship(back_populates="task")
 
 
+# class CreateTask(BaseModel):
+#     title: str
+#     description: str
+#     deadline: datetime
+#     priority: PriorityLevel
+#     user_id: int
+
+
 class CreateTask(BaseModel):
-    title: str
-    description: str
-    deadline: datetime
-    priority: PriorityLevel
-    user_id: int
+    url: str
 
 
 class UpdateTask(BaseModel):
