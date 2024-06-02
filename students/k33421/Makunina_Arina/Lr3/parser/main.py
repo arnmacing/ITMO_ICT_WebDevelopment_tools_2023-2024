@@ -134,14 +134,20 @@ def parse_data(url):
                     deadline = datetime.strptime(
                         formatted_date_time, "%Y-%m-%d %H:%M:%S.%f"
                     )
+                    formatted_date_time_str = deadline.strftime("%Y-%m-%d %H:%M:%S.%f")
                     logging.info(f"Converted date and time: {formatted_date_time}")
                 except ValueError as e:
-                    logging.error(f"Error converting date and time: {formatted_date_time} - {e}")
+                    logging.error(
+                        f"Error converting date and time: {formatted_date_time} - {e}"
+                    )
                     continue
             else:
                 deadline = incident.find_element(
                     By.CSS_SELECTOR, elements["deadline"]
                 ).get_attribute("datetime")
+                formatted_date_time_str = datetime.strptime(
+                    deadline, "%Y-%m-%dT%H:%M:%S.%fZ"
+                ).strftime("%Y-%m-%d %H:%M:%S.%f")
                 logging.info(f"Found deadline: {deadline}")
 
             user_id = random.randint(1, 3)
@@ -152,7 +158,7 @@ def parse_data(url):
                         "title": title,
                         "description": description,
                         "priority": priority,
-                        "deadline": deadline,
+                        "deadline": formatted_date_time_str,
                         "user_id": user_id,
                         "status": status,
                     }
