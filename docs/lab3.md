@@ -160,7 +160,7 @@ version: "3.8"
 services:
   web:
     build:
-      context: ../../../../../Downloads
+      context: ../../../../Downloads
       dockerfile: main.Dockerfile
     container_name: fastapi_app
     ports:
@@ -179,7 +179,7 @@ services:
 
   parser:
     build:
-      context: ../../../../../Downloads
+      context: ../../../../Downloads
       dockerfile: parser.Dockerfile
     container_name: fastapi_parser
     ports:
@@ -224,7 +224,7 @@ services:
 
   celery:
     build:
-      context: ../../../../../Downloads
+      context: ../../../../Downloads
       dockerfile: parser.Dockerfile
     command: [ "python", "-m", "celery", "-A", "celery_config.celery_app", "worker", "--loglevel=info" ]
     container_name: celery_worker
