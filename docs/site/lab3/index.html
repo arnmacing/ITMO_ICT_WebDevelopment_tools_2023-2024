@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Лабораторная работа №3: Упаковка FastAPI приложения в Docker, Работа с источниками данных и Очереди - My Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f \u0440\u0430\u0431\u043e\u0442\u0430 \u21163: \u0423\u043f\u0430\u043a\u043e\u0432\u043a\u0430 FastAPI \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0432 Docker, \u0420\u0430\u0431\u043e\u0442\u0430 \u0441 \u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a\u0430\u043c\u0438 \u0434\u0430\u043d\u043d\u044b\u0445 \u0438 \u041e\u0447\u0435\u0440\u0435\u0434\u0438";
+        var mkdocs_page_input_path = "lab3.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> My Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Welcome to MkDocs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../lab1/">Lab1</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../lab2/">Лабораторная работа №2: Сравнение подходов к параллельному программированию в Python</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Лабораторная работа №3: Упаковка FastAPI приложения в Docker, Работа с источниками данных и Очереди</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">Структура проекта</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#fastapi">FastAPI приложение</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#apppy">app.py</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#_2">Модель данных</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_3">Маршрут для парсинга</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_4">Маршрут для получения результата</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#_5">Функция для парсинга данных</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#celery">Задача Celery</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#celery_1">Конфигурация Celery</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#celery_configpy">celery_config.py</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#_6">Импортируемые модули</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#celery_2">Настройка Celery</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">Сборка и запуск контейнеров</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#docker-composeyml">docker-compose.yml</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#maindockerfile">main.Dockerfile</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#parserdockerfile">parser.Dockerfile</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#env">Файл .env</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_8">Собранные контейнеры:</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">My Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Лабораторная работа №3: Упаковка FastAPI приложения в Docker, Работа с источниками данных и Очереди</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="no3-fastapi-docker">Лабораторная работа №3: Упаковка FastAPI приложения в Docker, Работа с источниками данных и Очереди</h1>
+<p>Цель: Научиться упаковывать FastAPI приложение в Docker, интегрировать парсер данных с базой данных и вызывать парсер через API и очередь.</p>
+<h2 id="_1">Структура проекта</h2>
+<pre><code class="language-plaintext">application/
+├── backend/
+│   ├── __init__.py
+│   ├── app.py
+│   ├── database.py
+│   ├── main.py
+│   ├── models.py
+├── endpoints/
+│   ├── __init__.py
+│   ├── auth.py
+parser/
+│   ├── celery_config.py
+│   ├── main.py
+├── docker-compose.yml
+├── main.Dockerfile
+├── parser.Dockerfile
+├── requirements.txt
+├── .env
+</code></pre>
+<h2 id="fastapi">FastAPI приложение</h2>
+<h3 id="apppy">app.py</h3>
+<p>Файл <code>app.py</code> содержит инициализацию приложения FastAPI <code>web</code>.</p>
+<pre><code class="language-python">from fastapi import FastAPI
+
+app = FastAPI()
+</code></pre>
+<h4 id="_2">Модель данных</h4>
+<pre><code class="language-python">class ParseRequest(BaseModel):
+    url: str
+    callback_url: str
+</code></pre>
+<p>Эта модель описывает структуру запроса на парсинг URL.</p>
+<h4 id="_3">Маршрут для парсинга</h4>
+<pre><code class="language-python">@app.post(&quot;/parse/&quot;)
+async def parse_url(request: ParseRequest):
+    task = parse_url_task.delay(request.url, request.callback_url)
+    return {&quot;task_id&quot;: task.id}
+</code></pre>
+<p>Этот маршрут принимает запросы на парсинг URL и передает задачу Celery.</p>
+<h4 id="_4">Маршрут для получения результата</h4>
+<pre><code class="language-python">@app.get(&quot;/result/{task_id}&quot;)
+def get_result(task_id: str):
+    result = AsyncResult(task_id, app=celery_app)
+    if result.state == &quot;SUCCESS&quot;:
+        return {&quot;status&quot;: result.state, &quot;result&quot;: result.result}
+    return {&quot;status&quot;: result.state}
+</code></pre>
+<p>Этот маршрут позволяет получить статус и результат выполнения задачи по ее ID.</p>
+<h4 id="_5">Функция для парсинга данных</h4>
+<pre><code class="language-python">def parse_data(url):
+    logging.info(f&quot;Started scraping site {url}&quot;)
+    options = webdriver.ChromeOptions()
+    options.add_argument(&quot;--headless&quot;)
+    options.add_argument(&quot;--no-sandbox&quot;)
+    options.add_argument(&quot;--disable-dev-shm-usage&quot;)
+    service = Service(&quot;/usr/bin/chromedriver&quot;)
+    driver = webdriver.Chrome(service=service, options=options)
+    driver.get(url)
+    driver.implicitly_wait(20)
+    elements = css_elements[url]
+
+    incidents = driver.find_elements(By.CSS_SELECTOR, elements[&quot;incident_container&quot;])
+    data = []
+    successful_additions = 0
+
+    # Парсинг данных
+    ...
+
+    return data
+</code></pre>
+<p>Эта функция выполняет парсинг данных с указанного URL.</p>
+<h4 id="celery">Задача Celery</h4>
+<pre><code class="language-python">@shared_task
+def parse_url_task(url, callback_url):
+    logging.info(f&quot;Starting task for URL: {url}&quot;)
+    data = parse_data(url)
+    response = requests.post(callback_url, json=data)
+    if response.status_code != 200:
+        logging.error(f&quot;Failed to send data to callback URL: {callback_url}&quot;)
+        return f&quot;Failed to send data to callback URL: {callback_url}&quot;
+    logging.info(f&quot;Task completed for URL: {url}&quot;)
+    return &quot;Parsing completed&quot;
+</code></pre>
+<p>Эта задача выполняет парсинг URL и отправляет результат на указанный callback URL.</p>
+<h2 id="celery_1">Конфигурация Celery</h2>
+<h3 id="celery_configpy">celery_config.py</h3>
+<p>Файл <code>celery_config.py</code> содержит настройки Celery и Redis.</p>
+<h4 id="_6">Импортируемые модули</h4>
+<pre><code class="language-python">from celery import Celery
+import os
+</code></pre>
+<h4 id="celery_2">Настройка Celery</h4>
+<pre><code class="language-python">REDIS_URL = os.getenv(&quot;REDIS_URL&quot;)
+
+celery_app = Celery(&quot;parser&quot;, broker=REDIS_URL, backend=REDIS_URL)
+
+celery_app.conf.update(
+    task_serializer=&quot;json&quot;,
+    accept_content=[&quot;json&quot;],
+    result_serializer=&quot;json&quot;,
+    timezone=&quot;UTC&quot;,
+    enable_utc=True,
+)
+
+celery_app.autodiscover_tasks([&quot;main&quot;])
+</code></pre>
+<p>Этот файл настраивает Celery для использования Redis в качестве брокера и бэкэнда для хранения результатов задач.</p>
+<h2 id="_7">Сборка и запуск контейнеров</h2>
+<h3 id="docker-composeyml">docker-compose.yml</h3>
+<p>Файл <code>docker-compose.yml</code> описывает все сервисы, необходимые для работы приложения.</p>
+<pre><code class="language-yaml">version: &quot;3.8&quot;
+
+services:
+  web:
+    build:
+      context: ../../../../../Downloads
+      dockerfile: main.Dockerfile
+    container_name: fastapi_app
+    ports:
+      - &quot;8000:8000&quot;
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery:
+        condition: service_healthy
+    volumes:
+      - ./application:/app
+
+  parser:
+    build:
+      context: ../../../../../Downloads
+      dockerfile: parser.Dockerfile
+    container_name: fastapi_parser
+    ports:
+      - &quot;8001:8000&quot;
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./parser:/app
+
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2512
+      POSTGRES_DB: web
+    ports:
+      - &quot;5432:5432&quot;
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ &quot;CMD-SHELL&quot;, &quot;pg_isready -U postgres&quot; ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - &quot;6379:6379&quot;
+    healthcheck:
+      test: [ &quot;CMD&quot;, &quot;redis-cli&quot;, &quot;ping&quot; ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery:
+    build:
+      context: ../../../../../Downloads
+      dockerfile: parser.Dockerfile
+    command: [ &quot;python&quot;, &quot;-m&quot;, &quot;celery&quot;, &quot;-A&quot;, &quot;celery_config.celery_app&quot;, &quot;worker&quot;, &quot;--loglevel=info&quot; ]
+    container_name: celery_worker
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ &quot;CMD-SHELL&quot;, &quot;celery -A celery_config.celery_app status&quot; ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./parser:/app
+
+volumes:
+  postgres_data:
+</code></pre>
+<h3 id="maindockerfile">main.Dockerfile</h3>
+<p>Файл <code>main.Dockerfile</code> описывает сборку образа для основного приложения.</p>
+<pre><code class="language-dockerfile">FROM python:3.11
+
+WORKDIR /app
+
+COPY requirements.txt /app/requirements.txt
+
+RUN pip install -r /app/requirements.txt
+
+COPY .. /app
+
+COPY .env /app/
+
+EXPOSE 8000
+
+CMD [&quot;uvicorn&quot;, &quot;backend.main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;]
+</code></pre>
+<h3 id="parserdockerfile">parser.Dockerfile</h3>
+<p>Файл <code>parser.Dockerfile</code> описывает сборку образа для парсера.</p>
+<pre><code class="language-dockerfile">FROM python:3.11
+
+RUN apt-get update &amp;&amp; apt-get install -y \
+    wget \
+    unzip \
+    xvfb \
+    gnupg \
+    libnss3 \
+    libgconf-2-4 \
+    libxss1 \
+    libappindicator3-1 \
+    libasound2 \
+    fonts-liberation \
+    libappindicator3-1 \
+    xdg-utils \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+# Установка Google Chrome версии 125.0.6422.141
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip \
+    &amp;&amp; unzip chrome-linux64.zip -d /opt/ \
+    &amp;&amp; mv /opt/chrome-linux64 /opt/google-chrome \
+    &amp;&amp; ln -s /opt/google-chrome/chrome /usr/bin/google-chrome \
+    &amp;&amp; rm chrome-linux64.zip
+
+# Установка ChromeDriver версии 125.0.6422.141
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip \
+    &amp;&amp; unzip chromedriver-linux64.zip \
+    &amp;&amp; mv chromedriver-linux64/chromedriver /usr/bin/chromedriver \
+    &amp;&amp; chown root:root /usr/bin/chromedriver \
+    &amp;&amp; chmod +x /usr/bin/chromedriver \
+    &amp;&amp; rm chromedriver-linux64.zip
+
+RUN ls -l /usr/bin/chromedriver
+
+WORKDIR /app
+
+COPY ./requirements.txt /app/requirements.txt
+
+RUN pip install -r /app/requirements.txt
+
+COPY . /app
+
+
+
+COPY .env /app/
+
+EXPOSE 8000
+
+CMD [&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;]
+</code></pre>
+<h2 id="env">Файл .env</h2>
+<p>Файл <code>.env</code> содержит конфигурационные параметры для подключения к базе данных и Redis.</p>
+<h2 id="_8">Собранные контейнеры:</h2>
+<p><img alt="img.png" src="../img.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab2/" class="btn btn-neutral float-left" title="Лабораторная работа №2: Сравнение подходов к параллельному программированию в Python"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab2/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
