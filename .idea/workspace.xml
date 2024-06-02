@@ -4,52 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="76cdbada-cf3b-4197-937d-5c39ef2b6c32" name="Changes" comment="upload">
-      <change afterPath="$PROJECT_DIR$/.idea/ITMO_ICT_WebDevelopment_tools_2023-2024.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/404.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/Roboto-Slab-Bold.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/Roboto-Slab-Bold.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/Roboto-Slab-Regular.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/Roboto-Slab-Regular.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/fontawesome-webfont.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/fontawesome-webfont.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/fontawesome-webfont.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/fontawesome-webfont.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/fontawesome-webfont.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-bold-italic.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-bold-italic.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-bold.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-bold.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-normal-italic.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-normal-italic.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-normal.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/fonts/lato-normal.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/theme.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/css/theme_extra.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/img.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/img/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/js/html5shiv.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/js/jquery-3.6.0.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/js/theme.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/js/theme_extra.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/lab1/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/lab2/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/lab3/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/search/lunr.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/search/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/search/search_index.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/search/worker.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/sitemap.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/site/sitemap.xml.gz" afterDir="false" />
-    </list>
+    <list default="true" id="76cdbada-cf3b-4197-937d-5c39ef2b6c32" name="Changes" comment="upload" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -212,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717328395161</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="upload">
+      <option name="closed" value="true" />
+      <created>1717328592806</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1717328592806</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
